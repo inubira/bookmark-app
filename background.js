@@ -1,99 +1,58 @@
-const BOOKMARKS = {
-  'Company': [
-    { name: 'ECOUNT',             url: 'https://login.ecount.com/' },
-    { name: 'Asana',              url: 'https://app.asana.com/1/1145917644780783/home' },
-    { name: 'SPS Commerce',       url: 'https://commerce.spscommerce.com/home/apps/' },
-    { name: 'ShippingEasy',       url: 'https://app.shippingeasy.com/login' },
-    { name: 'ShipSaving',         url: 'https://s.shipsaving.com/login' },
-    { name: 'OneDrive',           url: 'https://yessalesinc620-my.sharepoint.com/' },
-    { name: 'Innerest Beauty',    url: 'https://innerestbeauty.com/' },
-    { name: 'Innerest Solutions', url: 'https://www.innerestsolutions.com/' },
-  ],
-  'Apps': [
-    { name: 'ChatGPT',      url: 'https://chatgpt.com/' },
-    { name: 'Gemini',       url: 'https://gemini.google.com/app' },
-    { name: 'Grok',         url: 'https://grok.com/' },
-    { name: 'Email Server', url: 'http://mail.yessalesusa.com/Mondo/lang/sys/Timeout.aspx' },
-    { name: 'Canva',        url: 'https://www.canva.com/' },
-  ],
-  'SharePoint': [
-    { name: 'Communication Site', url: 'https://yessalesinc620.sharepoint.com/' },
-    { name: '000. Yes Sales',     url: 'https://yessalesinc620.sharepoint.com/sites/000.Manual/SitePages/CollabHome.aspx' },
-    { name: '100. HR',            url: 'https://yessalesinc620.sharepoint.com/sites/100.HR/SitePages/CollabHome.aspx' },
-    { name: '105. Accounting',    url: 'https://yessalesinc620.sharepoint.com/sites/105.Accounting/SitePages/Home.aspx' },
-    { name: '110. Operation',     url: 'https://yessalesinc620.sharepoint.com/sites/110.Operation/SitePages/CollabHome.aspx' },
-    { name: '111. Shipping',      url: 'https://yessalesinc620.sharepoint.com/sites/111.Shipping/SitePages/CollabHome.aspx' },
-    { name: '114. Graphic',       url: 'https://yessalesinc620.sharepoint.com/sites/114.Graphic/SitePages/CollabHome.aspx' },
-    { name: '115. Marketing',     url: 'https://yessalesinc620.sharepoint.com/sites/marketing' },
-    { name: '120. Sales',         url: 'https://yessalesinc620.sharepoint.com/sites/120.Sales/SitePages/CollabHome.aspx' },
-    { name: '125. Sourcing',      url: 'https://yessalesinc620.sharepoint.com/sites/YesSales-Sourcing' },
-    { name: '130. Online',        url: 'https://yessalesinc620.sharepoint.com/sites/130.Online/SitePages/CollabHome.aspx' },
-    { name: '190. IT',            url: 'https://yessalesinc620.sharepoint.com/sites/YesSales-IT' },
-    { name: '900. Final Version', url: 'https://yessalesinc620.sharepoint.com/sites/900.FinalVersion/SitePages/CollabHome.aspx' },
-  ],
-  'Accounting': [
-    { name: 'QuickBooks',      url: 'https://quickbooks.intuit.com/' },
-    { name: '105. Accounting', url: 'https://yessalesinc620.sharepoint.com/sites/105.Accounting/SitePages/Home.aspx' },
-  ],
-  'HR': [
-    { name: 'ADP',      url: 'https://www.adp.com/' },
-    { name: '100. HR',  url: 'https://yessalesinc620.sharepoint.com/sites/100.HR/SitePages/CollabHome.aspx' },
-  ],
-  'Operation': [
-    { name: '110. Operation', url: 'https://yessalesinc620.sharepoint.com/sites/110.Operation/SitePages/CollabHome.aspx' },
-  ],
-  'Shipping': [
-    { name: 'ShippingEasy',  url: 'https://app.shippingeasy.com/login' },
-    { name: 'ShipSaving',    url: 'https://s.shipsaving.com/login' },
-    { name: '111. Shipping', url: 'https://yessalesinc620.sharepoint.com/sites/111.Shipping/SitePages/CollabHome.aspx' },
-  ],
-  'Graphic': [
-    { name: 'Canva',        url: 'https://www.canva.com/' },
-    { name: '114. Graphic', url: 'https://yessalesinc620.sharepoint.com/sites/114.Graphic/SitePages/CollabHome.aspx' },
-  ],
-  'Marketing': [
-    { name: 'TikTok',         url: 'https://www.tiktok.com/en/' },
-    { name: 'SoloVegan',      url: 'https://gosolovegan.com/' },
-    { name: '115. Marketing', url: 'https://yessalesinc620.sharepoint.com/sites/marketing' },
-  ],
-  'Sales': [
-    { name: 'Dollar Tree', url: 'https://www.dollartree.com/' },
-    { name: '120. Sales',  url: 'https://yessalesinc620.sharepoint.com/sites/120.Sales/SitePages/CollabHome.aspx' },
-  ],
-  'Sourcing': [
-    { name: '125. Sourcing', url: 'https://yessalesinc620.sharepoint.com/sites/YesSales-Sourcing' },
-  ],
-  'Online': [
-    { name: 'Amazon Seller Central', url: 'https://sellercentral.amazon.com/' },
-    { name: 'Shopify',               url: 'https://accounts.shopify.com/select?rid=025d24b7-df28-4dd0-807a-d4ce2f946a4c' },
-    { name: 'ShipSaving',            url: 'https://s.shipsaving.com/login' },
-    { name: '130. Online',           url: 'https://yessalesinc620.sharepoint.com/sites/130.Online/SitePages/CollabHome.aspx' },
-  ],
-  'IT': [
-    { name: 'M365',            url: 'https://m365.cloud.microsoft/apps/?auth=2' },
-    { name: 'M365 Admin',      url: 'https://m365.cloud.microsoft/apps/?auth=2' },
-    { name: 'MS Entra',        url: 'https://entra.microsoft.com/#home' },
-    { name: 'Tailscale',       url: 'https://login.tailscale.com/login?next_url=%2Fadmin%2Fmachines' },
-    { name: 'Avast',           url: 'http://businesshub.avast.com/dashboard?companyId=d501562c-f70d-4ce6-bb6a-b12e1986963c' },
-    { name: 'GoDaddy',         url: 'https://www.godaddy.com/' },
-    { name: 'Synology Backup', url: 'http://192.168.0.160:5000/' },
-    { name: '190. IT',         url: 'https://yessalesinc620.sharepoint.com/sites/YesSales-IT' },
-  ],
-};
+const SHEET_ID = '1izhN4nNK-_khkZ2dYN0CRQDqwcJIaZYwkXhC4zP8Hp0';
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 
-chrome.runtime.onInstalled.addListener(async () => {
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.trim().split('\n');
+  for (const line of lines) {
+    const cols = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        inQuotes = !inQuotes;
+      } else if (ch === ',' && !inQuotes) {
+        cols.push(current.trim());
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    cols.push(current.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
 
+async function createBookmarks() {
   // Prevent duplicate installation
   const existing = await chrome.bookmarks.search({ title: 'Yes Sales' });
   if (existing.length > 0) return;
 
-  // Create root folder in the bookmark bar (parentId: '1')
+  // Fetch data from Google Sheets
+  const response = await fetch(CSV_URL);
+  const text = await response.text();
+  const rows = parseCSV(text);
+
+  // Skip header row, group by Folder
+  const folders = {};
+  for (const [folder, siteName, url] of rows.slice(1)) {
+    if (!folder || !siteName || !url) continue;
+    if (!folders[folder]) folders[folder] = [];
+    folders[folder].push({ name: siteName, url });
+  }
+
+  // Create root folder in bookmark bar
   const root = await chrome.bookmarks.create({ parentId: '1', title: 'Yes Sales' });
 
-  for (const [folderName, items] of Object.entries(BOOKMARKS)) {
-    const folder = await chrome.bookmarks.create({ parentId: root.id, title: folderName });
+  // Create subfolders and bookmarks
+  for (const [folderName, items] of Object.entries(folders)) {
+    const subfolder = await chrome.bookmarks.create({ parentId: root.id, title: folderName });
     for (const { name, url } of items) {
-      await chrome.bookmarks.create({ parentId: folder.id, title: name, url });
+      await chrome.bookmarks.create({ parentId: subfolder.id, title: name, url });
     }
   }
-});
+}
+
+chrome.runtime.onInstalled.addListener(createBookmarks);
