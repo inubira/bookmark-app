@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Yes Sales Bookmarks",
+  "version": "1.0",
+  "description": "Auto-installs Yes Sales department bookmarks into your bookmark bar.",
+  "permissions": ["bookmarks"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
