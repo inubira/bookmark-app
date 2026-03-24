@@ -2,9 +2,20 @@
   "manifest_version": 3,
   "name": "Yes Sales Bookmarks",
   "version": "1.0",
-  "description": "Auto-installs Yes Sales department bookmarks into your bookmark bar.",
+  "description": "Adds Yes Sales company links to your Chrome bookmark bar, organized by department folder.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Yes Sales Bookmarks"
+  },
   "permissions": ["bookmarks"],
-  "host_permissions": ["https://docs.google.com/*"],
+  "host_permissions": [
+    "https://docs.google.com/*"
+  ],
   "background": {
     "service_worker": "background.js"
   }
