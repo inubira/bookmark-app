@@ -1,29 +1,24 @@
 name: Deploy to Chrome Web Store
-
 on:
   push:
     branches: [main]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Zip extension
         run: |
           zip -r extension.zip . \
             -x "*.git*" \
             -x ".github/*" \
             -x "*.md" \
-            -x "bookmarks_*.html" \
             -x "*.zip"
-
       - name: Upload to Chrome Web Store
-        uses: twnlink/chrome-extensions-upload@v1
+        uses: mnao305/chrome-extension-upload@v5.0.0
         with:
-          app-id: ${{ secrets.EXTENSION_ID }}
-          zip-path: extension.zip
+          file-path: extension.zip
+          extension-id: ${{ secrets.EXTENSION_ID }}
           client-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
           refresh-token: ${{ secrets.REFRESH_TOKEN }}
