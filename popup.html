@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yes Sales Bookmarks</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <span class="logo">Yes Sales</span>
+    <span class="badge">Bookmarks</span>
+  </header>
+
+  <main>
+    <div id="status-row">
+      <span id="status-icon">⋯</span>
+      <span id="status-text">Checking…</span>
+    </div>
+
+    <button id="action-btn" disabled>Loading</button>
+
+    <p id="note">
+      Bookmarks are loaded from the company Google Sheet and
+      added to your Chrome bookmark bar under <strong>Yes Sales</strong>.
+    </p>
+  </main>
+
+  <footer>
+    <a href="https://docs.google.com/document/d/1qg0JUxiuNrfgJ1ifoad8yEayMlHe6m0ZD1brj96MA7o/pub" target="_blank">Privacy Policy</a>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Icons – Yes Sales Bookmarks</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 60px auto; padding: 0 24px; }
+    h2 { margin-bottom: 8px; }
+    p  { color: #555; margin-bottom: 24px; line-height: 1.5; }
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    button {
+      padding: 10px 20px;
+      background: #1a3a5c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #16304e; }
+    canvas { display: none; }
+    .note { margin-top: 20px; color: #888; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h2>Yes Sales Bookmarks – Icon Generator</h2>
+  <p>
+    Click each button to download a PNG icon file, then place all three files
+    inside the <code>icons/</code> folder before uploading to the Chrome Web Store.
+  </p>
+  <div class="btn-row">
+    <button onclick="gen(16)">icon16.png</button>
+    <button onclick="gen(48)">icon48.png</button>
+    <button onclick="gen(128)">icon128.png</button>
+  </div>
+  <p class="note">Icons are generated locally in your browser — nothing is uploaded.</p>
+
+  <canvas id="c"></canvas>
+
+  <script>
+    function gen(size) {
+      const canvas = document.getElementById('c');
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const r = Math.round(size * 0.18);
+
+      // Rounded background
+      ctx.fillStyle = '#1a3a5c';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, r);
+      ctx.fill();
+
+      // "YS" text (use single "Y" for very small sizes)
+      ctx.fillStyle = '#ffffff';
+      const label = size >= 32 ? 'YS' : 'Y';
+      ctx.font = `700 ${Math.round(size * 0.48)}px Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, size / 2, size / 2 + Math.round(size * 0.02));
+
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `icon${size}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
