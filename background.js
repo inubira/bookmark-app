@@ -8,7 +8,7 @@ const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?form
 const ROOT_TITLE = 'Yes Sales';
 
 // These folders appear FIRST (in order), then a separator, then the rest
-const PRIORITY_FOLDERS = ['Company', 'SharePoint', 'Apps'];
+const PRIORITY_FOLDERS = ['Company', 'Apps', 'Share Point'];
 const SEPARATOR_TITLE  = '──────────────';
 
 // ── CSV parser ───────────────────────────────────────────────
@@ -37,7 +37,12 @@ async function fetchGroups() {
   const groups = {};
   for (const [cat = '', name = '', url = ''] of rows) {
     const c = cat.trim(), n = name.trim(), u = url.trim();
-    if (!c || !n || !u) continue;
+    if (!c) continue;
+    if (/^-+$/.test(u) || u === '—' || u.toLowerCase() === 'separator') {
+      (groups[c] ??= []).push({ name: SEPARATOR_TITLE, url: '---' });
+      continue;
+    }
+    if (!n || !u) continue;
     (groups[c] ??= []).push({ name: n, url: u });
   }
   return groups;
@@ -64,7 +69,11 @@ async function buildTree(groups) {
     if (groups[cat]?.length) {
       const folder = await chrome.bookmarks.create({ parentId: root.id, title: cat });
       for (const { name, url } of groups[cat]) {
-        await chrome.bookmarks.create({ parentId: folder.id, title: name, url });
+        if (url === '---') {
+          await chrome.bookmarks.create({ parentId: folder.id, title: SEPARATOR_TITLE, url: 'about:blank' });
+        } else {
+          await chrome.bookmarks.create({ parentId: folder.id, title: name, url });
+        }
       }
       priorityCreated.push(cat);
     }
@@ -81,7 +90,11 @@ async function buildTree(groups) {
     if (groups[cat]?.length) {
       const folder = await chrome.bookmarks.create({ parentId: root.id, title: cat });
       for (const { name, url } of groups[cat]) {
-        await chrome.bookmarks.create({ parentId: folder.id, title: name, url });
+        if (url === '---') {
+          await chrome.bookmarks.create({ parentId: folder.id, title: SEPARATOR_TITLE, url: 'about:blank' });
+        } else {
+          await chrome.bookmarks.create({ parentId: folder.id, title: name, url });
+        }
       }
     }
   }
