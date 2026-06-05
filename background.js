@@ -8,8 +8,13 @@ const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?form
 const ROOT_TITLE = 'Yes Sales';
 
 // These folders appear FIRST (in order), then a separator, then the rest
-const PRIORITY_FOLDERS = ['Company', 'Apps', 'Share Point'];
+const PRIORITY_FOLDERS = ['Company', 'Share Point', 'Apps'];
 const SEPARATOR_TITLE  = '──────────────';
+
+// Case/whitespace-insensitive match for folder names
+const norm = s => s.trim().toLowerCase().replace(/\s+/g, ' ');
+const isPriority = k => PRIORITY_FOLDERS.some(p => norm(p) === norm(k));
+const priorityIndex = k => PRIORITY_FOLDERS.findIndex(p => norm(p) === norm(k));
 
 // ── CSV parser ───────────────────────────────────────────────
 function parseCSV(text) {
@@ -35,9 +40,18 @@ async function fetchGroups() {
   const rows = parseCSV(await resp.text()).slice(1); // skip header
 
   const groups = {};
+  let sepCount = 0;
   for (const [cat = '', name = '', url = ''] of rows) {
     const c = cat.trim(), n = name.trim(), u = url.trim();
     if (!c) continue;
+
+    // A열이 --- 이면 메인 폴더 레벨 구분선
+    if (/^-+$/.test(c) || c === '—') {
+      groups[`__SEP_${sepCount++}__`] = null;
+      continue;
+    }
+
+    // C열이 --- 이면 폴더 내부 구분선
     if (/^-+$/.test(u) || u === '—' || u.toLowerCase() === 'separator') {
       (groups[c] ??= []).push({ name: SEPARATOR_TITLE, url: '---' });
       continue;
@@ -63,9 +77,14 @@ async function buildTree(groups) {
   // Create root folder in the bookmark bar (parentId '1' = Bookmarks Bar)
   const root = await chrome.bookmarks.create({ parentId: '1', title: ROOT_TITLE });
 
-  // Priority folders first (Company, SharePoint, Apps)
+  // Priority folders first (Company, Share Point, Apps) — sorted by PRIORITY_FOLDERS order
+  const allKeys = Object.keys(groups);
+  const priorityKeys = PRIORITY_FOLDERS
+    .map(p => allKeys.find(k => norm(k) === norm(p)))
+    .filter(Boolean);
+
   const priorityCreated = [];
-  for (const cat of PRIORITY_FOLDERS) {
+  for (const cat of priorityKeys) {
     if (groups[cat]?.length) {
       const folder = await chrome.bookmarks.create({ parentId: root.id, title: cat });
       for (const { name, url } of groups[cat]) {
@@ -80,13 +99,18 @@ async function buildTree(groups) {
   }
 
   // Separator (only if there are also department folders)
-  const deptCategories = Object.keys(groups).filter(k => !PRIORITY_FOLDERS.includes(k));
+  const deptCategories = allKeys.filter(k => !isPriority(k));
   if (priorityCreated.length > 0 && deptCategories.length > 0) {
     await chrome.bookmarks.create({ parentId: root.id, title: SEPARATOR_TITLE, url: 'about:blank' });
   }
 
   // Department folders (all remaining categories, in sheet order)
   for (const cat of deptCategories) {
+    // 메인 레벨 구분선
+    if (cat.startsWith('__SEP_')) {
+      await chrome.bookmarks.create({ parentId: root.id, title: SEPARATOR_TITLE, url: 'about:blank' });
+      continue;
+    }
     if (groups[cat]?.length) {
       const folder = await chrome.bookmarks.create({ parentId: root.id, title: cat });
       for (const { name, url } of groups[cat]) {
