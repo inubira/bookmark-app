@@ -18,12 +18,13 @@ jobs:
 
       - name: Upload to Chrome Web Store
         run: |
-          ACCESS_TOKEN=$(curl -s -X POST https://oauth2.googleapis.com/token \
+          TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
             -d "client_id=${{ secrets.CLIENT_ID }}" \
             -d "client_secret=${{ secrets.CLIENT_SECRET }}" \
             -d "refresh_token=${{ secrets.REFRESH_TOKEN }}" \
-            -d "grant_type=refresh_token" \
-            | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+            -d "grant_type=refresh_token")
+          echo "Token response: $TOKEN_RESPONSE"
+          ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
           curl -s -X PUT \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
