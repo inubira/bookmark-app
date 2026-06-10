@@ -52,10 +52,18 @@ async function removeExisting() {
   }
 }
 
+// ── Get Bookmarks Bar ID dynamically ────────────────────────
+async function getBookmarksBarId() {
+  const tree = await chrome.bookmarks.getTree();
+  // tree[0].children = [Bookmarks Bar, Other Bookmarks, ...]
+  const bar = tree[0]?.children?.find(n => !n.url) ?? tree[0]?.children?.[0];
+  return bar?.id ?? '1';
+}
+
 // ── Create full bookmark tree ────────────────────────────────
 async function buildTree(groups) {
-  // Create root folder in the bookmark bar (parentId '1' = Bookmarks Bar)
-  const root = await chrome.bookmarks.create({ parentId: '1', title: ROOT_TITLE });
+  const barId = await getBookmarksBarId();
+  const root = await chrome.bookmarks.create({ parentId: barId, title: ROOT_TITLE });
 
   // Priority folders first (Company, Share Point, Apps) — sorted by PRIORITY_FOLDERS order
   const allKeys = Object.keys(groups);
