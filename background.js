@@ -1,9 +1,6 @@
 // ── Config ──────────────────────────────────────────────────
-// Update SHEET_ID to your Google Sheet's ID.
-// The sheet must be shared: "Anyone with the link → Viewer".
-// Columns: A = Category  |  B = Name  |  C = URL  (row 1 = header, skipped)
-const SHEET_ID = '1izhN4nNK-_khkZ2dYN0CRQDqwcJIaZYwkXhC4zP8Hp0';
-const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+// Apps Script Web App URL — Execute as: Me, Who has access: Anyone
+const DATA_URL = 'https://script.google.com/macros/s/AKfycbxWtkIIGclc4tk5UHdUA_MFMaHuGvNyI92e5AplQFXkrJRdhkqfSjGt7iCzmMjDp6olSQ/exec';
 
 const ROOT_TITLE = 'Yes Sales';
 
@@ -16,33 +13,16 @@ const norm = s => s.trim().toLowerCase().replace(/\s+/g, ' ');
 const isPriority = k => PRIORITY_FOLDERS.some(p => norm(p) === norm(k));
 const priorityIndex = k => PRIORITY_FOLDERS.findIndex(p => norm(p) === norm(k));
 
-// ── CSV parser ───────────────────────────────────────────────
-function parseCSV(text) {
-  const rows = [];
-  for (const line of text.trim().split('\n')) {
-    const cols = [];
-    let cur = '', inQ = false;
-    for (const ch of line) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
-    }
-    cols.push(cur.trim());
-    rows.push(cols);
-  }
-  return rows;
-}
-
-// ── Fetch bookmark data from Google Sheets ───────────────────
+// ── Fetch bookmark data from Apps Script ─────────────────────
 async function fetchGroups() {
-  const resp = await fetch(CSV_URL);
+  const resp = await fetch(DATA_URL);
   if (!resp.ok) throw new Error(`Fetch failed: HTTP ${resp.status}`);
-  const rows = parseCSV(await resp.text()).slice(1); // skip header
+  const rows = await resp.json();
 
   const groups = {};
   let sepCount = 0;
-  for (const [cat = '', name = '', url = ''] of rows) {
-    const c = cat.trim(), n = name.trim(), u = url.trim();
+  for (const { folder, name, url } of rows) {
+    const c = (folder || '').trim(), n = (name || '').trim(), u = (url || '').trim();
     if (!c) continue;
 
     // A열이 --- 이면 메인 폴더 레벨 구분선
